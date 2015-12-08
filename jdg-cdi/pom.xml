@@ -1,0 +1,241 @@
+<!--
+   JBoss, Home of Professional Open Source
+   Copyright 2013, Red Hat, Inc. and/or its affiliates, and individual
+   contributors by the @authors tag. See the copyright.txt in the
+   distribution for a full listing of individual contributors.
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+   http://www.apache.org/licenses/LICENSE-2.0
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+   -->
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>org.jboss.quickstarts.jdg</groupId>
+    <artifactId>jboss-cdi-quickstart</artifactId>
+    <version>6.5.1.Final-redhat-1</version>
+    <packaging>war</packaging>
+
+    <name>JBoss JDG Quickstart: CDI</name>
+    <description>This quickstart demonstrates the Infinispan CDI Support.</description>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven.compiler.source>1.7</maven.compiler.source>
+        <maven.compiler.target>1.7</maven.compiler.target>
+
+        <maven.test.skip>true</maven.test.skip>
+        <!-- Versions -->
+        <version.jboss.javaee.web>3.0.3.Final</version.jboss.javaee.web>
+        <version.arquillian>1.1.5.Final</version.arquillian>
+        <version.junit>4.12</version.junit>
+        <version.org.infinispan>6.3.1.Final-redhat-1</version.org.infinispan>
+        <version.org.infinispan.er>6.4.0.ER3-redhat-1</version.org.infinispan.er>
+        <version.eap-arquillian>7.2.0.Final</version.eap-arquillian>
+        <version.jboss.bom.eap>6.4.0.GA</version.jboss.bom.eap>
+        
+    </properties>
+
+    <developers>
+        <developer>
+            <id>kevinpollet</id>
+            <name>Kevin Pollet</name>
+            <email>pollet.kevin@gmail.com</email>
+        </developer>
+        <developer>
+            <id>slaskawi</id>
+            <name>Sebastian Laskawiec</name>
+            <email>slaskawi@redhat.com</email>
+        </developer>
+    </developers>
+
+    <dependencyManagement>
+        <dependencies>
+        <!-- 
+            <dependency>
+                <groupId>org.jboss.spec</groupId>
+                <artifactId>jboss-javaee-web-6.0</artifactId>
+                <version>${version.jboss.javaee.web}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        -->
+			<dependency>
+		        <groupId>org.jboss.bom.eap</groupId>
+		        <artifactId>jboss-javaee-6.0-with-tools</artifactId>
+		        <version>${version.jboss.bom.eap}</version>
+		        <type>pom</type>
+		        <scope>import</scope>
+		    </dependency>            
+		    <dependency>
+		        <groupId>org.jboss.bom.eap</groupId>
+		        <artifactId>jboss-javaee-6.0-with-hibernate</artifactId>
+		        <version>${version.jboss.bom.eap}</version>
+		        <type>pom</type>
+		        <scope>import</scope>
+		    </dependency>
+		      
+            <!-- Define the versions of Arquillian dependencies we want to use -->
+            <dependency>
+                <groupId>org.jboss.arquillian</groupId>
+                <artifactId>arquillian-bom</artifactId>
+                <version>${version.arquillian}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>org.infinispan</groupId>
+                <artifactId>infinispan-bom</artifactId>
+                <version>${version.org.infinispan}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <dependencies>
+        <!-- API dependencies -->
+	    <dependency>
+	      <groupId>org.jboss.spec.javax.ejb</groupId>
+	      <artifactId>jboss-ejb-api_3.1_spec</artifactId>
+	      <scope>provided</scope>
+	    </dependency>   
+	    <dependency>
+	      <groupId>org.jboss.spec.javax.annotation</groupId>
+	      <artifactId>jboss-annotations-api_1.1_spec</artifactId>
+	      <scope>provided</scope>
+	    </dependency>
+		
+		<!-- JPA/Hibernate -->	    
+	    <dependency>
+	      <groupId>org.hibernate.javax.persistence</groupId>
+	      <artifactId>hibernate-jpa-2.0-api</artifactId>
+	      <scope>provided</scope>
+	    </dependency>
+	    <dependency>
+	      <groupId>org.hibernate</groupId>
+	      <artifactId>hibernate-validator</artifactId>
+	      <scope>provided</scope>
+	      <exclusions>
+	        <exclusion>
+	          <artifactId>slf4j-api</artifactId>
+	          <groupId>org.slf4j</groupId>
+	        </exclusion>
+	      </exclusions>
+	    </dependency>
+	    <dependency>
+	      <groupId>org.hibernate</groupId>
+	      <artifactId>hibernate-jpamodelgen</artifactId>
+	      <scope>provided</scope>
+	    </dependency>
+	    <dependency>
+	      <groupId>org.hibernate</groupId>
+	      <artifactId>hibernate-validator-annotation-processor</artifactId>
+	      <scope>provided</scope>
+	    </dependency>	    
+	    	         
+	    <!-- CDI -->
+        <dependency>
+            <groupId>javax.enterprise</groupId>
+            <artifactId>cdi-api</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        
+        <!-- jCache -->
+        <dependency>
+            <groupId>javax.cache</groupId>
+            <artifactId>cache-api</artifactId>
+        </dependency>
+
+        <!-- Infinispan dependency -->
+        <dependency>
+            <groupId>org.infinispan</groupId>
+            <artifactId>infinispan-cdi</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.infinispan</groupId>
+            <artifactId>infinispan-jcache</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.infinispan</groupId>
+            <artifactId>infinispan-jcache-commons</artifactId>
+        </dependency>
+
+        <!-- Test dependencies -->
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>${version.junit}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.jboss.arquillian.junit</groupId>
+            <artifactId>arquillian-junit-container</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.jboss.shrinkwrap.resolver</groupId>
+            <artifactId>shrinkwrap-resolver-impl-maven</artifactId>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <finalName>infinispan-cdi</finalName>
+        <plugins>
+            <plugin>
+                <artifactId>maven-war-plugin</artifactId>
+                <version>2.6</version>
+                <configuration>
+                    <failOnMissingWebXml>false</failOnMissingWebXml>
+                    <archive>
+                    <!-- slot jdg-6.5
+                    	<manifestEntries>
+                    	<Dependencies>org.infinispan:jdg-6.5 services, org.infinispan.cdi:jdg-6.5 meta-inf, org.hibernate, org.jgroups, org.infinispan.jcache:jdg-6.5 services</Dependencies>
+                    	</manifestEntries>
+                    -->
+                    <!-- slot jdg-6.6
+                        <manifestEntries>
+                            <Dependencies>org.infinispan:jdg-6.6 services, org.infinispan.cdi:jdg-6.6 meta-inf, org.infinispan.jcache:jdg-6.6 meta-inf services, javax.cache.api:jdg-6.6</Dependencies>
+                        </manifestEntries>
+                    -->                    
+                        <manifest>
+                            <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+                        </manifest>
+                    </archive>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.jboss.as.plugins</groupId>
+                <artifactId>jboss-as-maven-plugin</artifactId>
+                <version>7.7.Final</version>
+            </plugin>
+        </plugins>
+    </build>
+
+    <profiles>
+        <profile>
+            <id>eap-remote</id>
+            <properties>
+                <maven.test.skip>false</maven.test.skip>
+            </properties>
+            <dependencies>
+                <dependency>
+                    <groupId>org.jboss.as</groupId>
+                    <artifactId>jboss-as-arquillian-container-remote</artifactId>
+                    <scope>test</scope>
+                </dependency>
+            </dependencies>
+        </profile>
+    </profiles>
+
+</project>

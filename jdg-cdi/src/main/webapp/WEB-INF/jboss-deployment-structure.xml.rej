@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jboss-deployment-structure xmlns="urn:jboss:deployment-structure:1.2">
+	<deployment>
+		<dependencies>
+			<module name="org.infinispan" slot="jdg-6.6" services="export" />
+			<module name="org.infinispan.cdi" slot="jdg-6.6" meta-inf="import" />
+			<module name="org.infinispan.jcache" slot="jdg-6.6" meta-inf="export" services="import" />
+			<module name="javax.cache.api" slot="jdg-6.6" />
+			
+		</dependencies>
+	</deployment>
+</jboss-deployment-structure>
