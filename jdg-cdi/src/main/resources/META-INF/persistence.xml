@@ -30,6 +30,12 @@
          <!-- Properties for Hibernate -->
          <property name="hibernate.hbm2ddl.auto" value="create-drop" />
          <property name="hibernate.show_sql" value="false" />
+         
+         <!-- Workaround to prevent classloading conflicts between Infinispan and Hibernate Core
+            see more details here: 
+               https://bugzilla.redhat.com/show_bug.cgi?id=1202911
+          -->
+         <property name="jboss.as.jpa.providerModule" value="application" />
       </properties>
    </persistence-unit>   
 </persistence>

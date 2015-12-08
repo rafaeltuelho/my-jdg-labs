@@ -165,11 +165,12 @@
             <groupId>org.infinispan</groupId>
             <artifactId>infinispan-jcache</artifactId>
         </dependency>
+        <!-- 
         <dependency>
             <groupId>org.infinispan</groupId>
             <artifactId>infinispan-jcache-commons</artifactId>
         </dependency>
-
+		-->
         <!-- Test dependencies -->
         <dependency>
             <groupId>junit</groupId>
@@ -205,7 +206,7 @@
                     -->
                     <!-- slot jdg-6.6
                         <manifestEntries>
-                            <Dependencies>org.infinispan:jdg-6.6 services, org.infinispan.cdi:jdg-6.6 meta-inf, org.infinispan.jcache:jdg-6.6 meta-inf services, javax.cache.api:jdg-6.6</Dependencies>
+                            <Dependencies>org.infinispan:jdg-6.6 services, org.infinispan.cdi:jdg-6.6 meta-inf, org.infinispan.jcache:jdg-6.6 meta-inf services, javax.cache.api:jdg-6.6, org.hibernate</Dependencies>
                         </manifestEntries>
                     -->                    
                         <manifest>

@@ -27,7 +27,7 @@ public class CachePreLoader {
 	private void init(){
 		log.info("\n\t Initializing Distributed Cache node\n");
 		
-		for (int i = 0; i < 1000; i++) {
+		for (int i = 0; i < 10; i++) {
 			cache.put("k" + i, java.util.UUID.randomUUID().toString());			
 		}
 		
