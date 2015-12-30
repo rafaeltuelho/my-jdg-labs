@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jboss-deployment-structure xmlns="urn:jboss:deployment-structure:1.2">
+	<deployment>
+		<dependencies>
+			<module name="org.infinispan" slot="jdg-6.6" services="export" />
+			<module name="org.infinispan.cdi" slot="jdg-6.6" meta-inf="import"/>
+			<module name="org.infinispan.query" slot="jdg-6.6" services="export" />
+			<module name="org.infinispan.query.dsl" slot="jdg-6.6"/>
+			
+			<!-- remoting -->
+			<module name="org.infinispan.client.hotrod" slot="jdg-6.5" services="export"/>
+			<module name="org.jboss.remoting3" slot="jdg-6.5"/>
+			
+			<!-- 
+			<module name="org.antlr.antlr-runtime" slot="jdg-6.5"/>
+			<module name="org.infinispan.jcache" slot="jdg-6.5" services="import" />
+
+				as described in JDG 6.5 Administration Guide - section 18.8
+				obs: JPA Cache Store is only supported in Library mode 
+			<module name="org.infinispan.persistence.jpa" slot="jdg-6.5" services="export" />
+			-->
+
+			<module name="org.jgroups" slot="jdg-6.6" />
+			<module name="org.hibernate" />
+		</dependencies>
+	</deployment>
+</jboss-deployment-structure>
