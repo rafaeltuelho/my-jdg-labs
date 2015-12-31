@@ -24,9 +24,13 @@ package org.jboss.tools.examples.datagrid;
 
 import java.util.logging.Logger;
 
+import javax.enterprise.context.ApplicationScoped;
+import javax.enterprise.inject.Disposes;
+import javax.enterprise.inject.Produces;
+import javax.inject.Inject;
+
 import org.infinispan.AdvancedCache;
 import org.infinispan.Cache;
-import org.infinispan.cdi.RemoteCacheProducer;
 import org.infinispan.client.hotrod.RemoteCache;
 import org.infinispan.client.hotrod.RemoteCacheManager;
 import org.infinispan.configuration.cache.CacheMode;
@@ -37,12 +41,7 @@ import org.infinispan.configuration.global.GlobalConfigurationBuilder;
 import org.infinispan.eviction.EvictionStrategy;
 import org.infinispan.manager.DefaultCacheManager;
 import org.infinispan.manager.EmbeddedCacheManager;
-import org.jboss.tools.examples.model.CachedMember;
 import org.jboss.tools.examples.model.Member;
-
-import javax.enterprise.context.ApplicationScoped;
-import javax.enterprise.inject.Produces;
-import javax.inject.Inject;
 
 /**
  * This is the configuration class for DG.
@@ -99,10 +98,10 @@ public class JDGResourcesConfig {
     @Produces
     @MembersClusteredCache
     @ApplicationScoped
-    private AdvancedCache<Long, CachedMember> membersClusteredCache(@MembersClusteredCache EmbeddedCacheManager cacheManager){
+    private AdvancedCache<String, Member> membersClusteredCache(@MembersClusteredCache EmbeddedCacheManager cacheManager){
     	log.info("\n\t ->>> Builds the CLUSTERED members-cache's \n");
     	
-    	Cache<Long, CachedMember> cache = cacheManager.getCache("members-cache");
+    	Cache<String, Member> cache = cacheManager.getCache("members-cache");
     	cache.getAdvancedCache().addListener(new ClusteredCacheListener());
     	return cache.getAdvancedCache();
     }
@@ -110,10 +109,10 @@ public class JDGResourcesConfig {
     @Produces
     @MembersClusteredCache
     @ApplicationScoped
-    private RemoteCache<Long, CachedMember> membersRemoteCache(@MembersRemoteCache RemoteCacheManager cacheManager){
+    private RemoteCache<String, Member> membersRemoteCache(@MembersRemoteCache RemoteCacheManager cacheManager){
     	log.info("\n\t ->>> Builds the CLUSTERED members-cache's \n");
     	
-    	RemoteCache<Long, CachedMember> cache = cacheManager.getCache("members-remote-cache");
+    	RemoteCache<String, Member> cache = cacheManager.getCache("members-remote-cache");
     	return cache;
     }
     
@@ -148,6 +147,16 @@ public class JDGResourcesConfig {
     				.addServer().host(JDG_REMOTE_HOST_ADDR).port(JDG_REMOTE_HOST_PORT).build();
     	
         return new RemoteCacheManager(remoteConf);
+    }
+    
+    public void closeMembersClusteredCacheManager(@Disposes @MembersClusteredCache EmbeddedCacheManager cm){
+    	log.info("\n\t ->>> Stops members-CLUSTERED-cache's EmbeddedCacheManager \n");
+    	cm.stop();
+    }
+
+    public void closeMembersRemoteCacheManager(@Disposes @MembersRemoteCache RemoteCacheManager cm){
+    	log.info("\n\t ->>> Stops members-REMOTE-cache's RemoteCacheManager \n");
+    	cm.stop();
     }
       
 }

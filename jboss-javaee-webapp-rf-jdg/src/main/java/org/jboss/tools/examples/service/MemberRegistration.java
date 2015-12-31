@@ -16,18 +16,16 @@
  */
 package org.jboss.tools.examples.service;
 
-import org.infinispan.AdvancedCache;
-import org.infinispan.context.Flag;
-import org.jboss.tools.examples.datagrid.MembersClusteredCache;
-import org.jboss.tools.examples.model.CachedMember;
-import org.jboss.tools.examples.model.Member;
+import java.util.logging.Logger;
 
 import javax.ejb.Stateless;
 import javax.enterprise.event.Event;
 import javax.inject.Inject;
-import javax.persistence.EntityManager;
 
-import java.util.logging.Logger;
+import org.infinispan.AdvancedCache;
+import org.infinispan.context.Flag;
+import org.jboss.tools.examples.datagrid.MembersClusteredCache;
+import org.jboss.tools.examples.model.Member;
 
 // The @Stateless annotation eliminates the need for manual transaction demarcation
 @Stateless
@@ -37,33 +35,20 @@ public class MemberRegistration {
     private Logger log;
 
     @Inject
-    private EntityManager em;
-
-    @Inject
     private Event<Member> memberEventSrc;
 
-    @Inject
-    private Event<CachedMember> cachedMemberEventSrc;
-	
 	@Inject
 	@MembersClusteredCache
-	private AdvancedCache<Long, CachedMember> membersCache;
+	private AdvancedCache<String, Member> membersCache;
 	
     public void register(Member member) throws Exception {
         log.info("Registering " + member.getName());
-        em.persist(member);
         
-		long cacheKey = member.getId() + System.currentTimeMillis();
-		CachedMember cachedMember = new CachedMember();
-		cachedMember.setEmail(member.getEmail());
-		cachedMember.setId(cacheKey);
-		cachedMember.setName(member.getName());
-		cachedMember.setPhoneNumber(member.getPhoneNumber());
+		String cacheKey = member.getEmail();
 		
 		membersCache.getAdvancedCache().withFlags(Flag.SKIP_CACHE_LOAD)
-			.put(cacheKey, cachedMember);        
+			.putIfAbsent(cacheKey, member);        
         
         memberEventSrc.fire(member);
-        cachedMemberEventSrc.fire(cachedMember);
     }
 }

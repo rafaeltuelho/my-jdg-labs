@@ -27,10 +27,10 @@
         <h:outputStylesheet name="app.css" library="css"/>
         <h:outputScript target="head" name="showMessage.js" library="js"/>
 
-        <h1>Welcome to JBoss!</h1>
+        <h1>Welcome to JBoss EAP 6!</h1>
 
         <div>
-            <p>You have successfully deployed a RichFaces web application.</p>
+            <p>This demo app will use JBoss Data Grid as its persistent Storage.</p>
         </div>
 
        <h:form id="reg">
@@ -79,7 +79,7 @@
                    </rich:column>
                    <rich:column id="member_rest_url">
                       <f:facet name="header">REST URL</f:facet>
-                      <a href="#{request.contextPath}/rest/members/#{_member.id}" target="_rest_member">/rest/members/#{_member.id}</a>
+                      <a href="#{request.contextPath}/rest/members/#{_member.email}" target="_rest_member">/rest/members/#{_member.email}</a>
                    </rich:column>
                    <f:facet name="footer">
                       REST URL for all members: <a href="#{request.contextPath}/rest/members" target="_rest_all">/rest/members</a>
@@ -107,42 +107,6 @@
           </a4j:push>
 
           <div id="newMemberOnCacheMessages" class="update"/>
-
-          <rich:collapsiblePanel id="cachedMemberList" header="Cached Members" headerClass="header" title="Click to expand/collapse">
-             <h:panelGroup rendered="#{empty membersFromCache}">
-                <em>No cached members.</em>
-             </h:panelGroup>
-             <rich:dataTable id="memberCachedTable" var="_cachedMember" value="#{membersFromCache}" rendered="#{not empty membersFromCache}" style="width : 100%">
-                   <rich:column id="cachedMember_id">
-                      <f:facet name="header">Id</f:facet>
-                      #{_cachedMember.id}
-                   </rich:column>
-                   <rich:column id="cachedMember_name">
-                      <f:facet name="header">Name</f:facet>
-                      #{_cachedMember.name}
-                   </rich:column>
-                   <rich:column id="cachedMember_email">
-                      <f:facet name="header">Email</f:facet>
-                      #{_cachedMember.email}
-                   </rich:column>
-                   <rich:column id="cachedMember_phone">
-                      <f:facet name="header">Phone #</f:facet>
-                      #{_cachedMember.phoneNumber}
-                   </rich:column>
-                   <rich:column id="cachedMember_rest_url">
-                      <f:facet name="header">REST URL</f:facet>
-                      <a href="#{request.contextPath}/rest/members/#{_member.id}" target="_rest_member">/rest/members/#{_member.id}</a>
-                   </rich:column>
-                   <f:facet name="footer">
-                      REST URL for all members: <a href="#{request.contextPath}/rest/members" target="_rest_all">/rest/members</a>
-                   </f:facet>
-                </rich:dataTable>
-          </rich:collapsiblePanel>
-
-          <a4j:push address="pushCdiForCache" ondataavailable="showMessage(event.rf.data)">
-             <a4j:ajax event="dataavailable" render="cachedMemberList"  />
-          </a4j:push>
-
        </h:form>
     </ui:define>
 </ui:composition>

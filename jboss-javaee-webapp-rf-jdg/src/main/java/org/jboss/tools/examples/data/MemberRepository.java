@@ -16,14 +16,10 @@
  */
 package org.jboss.tools.examples.data;
 
+import java.util.List;
+
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
-import javax.persistence.EntityManager;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Root;
-
-import java.util.List;
 
 import org.infinispan.AdvancedCache;
 import org.infinispan.query.Search;
@@ -31,7 +27,6 @@ import org.infinispan.query.dsl.Query;
 import org.infinispan.query.dsl.QueryFactory;
 import org.infinispan.query.dsl.SortOrder;
 import org.jboss.tools.examples.datagrid.MembersClusteredCache;
-import org.jboss.tools.examples.model.CachedMember;
 import org.jboss.tools.examples.model.Member;
 
 
@@ -39,47 +34,22 @@ import org.jboss.tools.examples.model.Member;
 public class MemberRepository {
 
     @Inject
-    private EntityManager em;
-
-    @Inject
     @MembersClusteredCache
-    private AdvancedCache<Long, CachedMember> membersCache;
+    private AdvancedCache<String, Member> membersCache;
     
-    public Member findById(Long id) {
-        return em.find(Member.class, id);
+    public Member findByKey(String key) {
+        return membersCache.get(key);
     }
 
     public Member findByEmail(String email) {
-        CriteriaBuilder cb = em.getCriteriaBuilder();
-        CriteriaQuery<Member> criteria = cb.createQuery(Member.class);
-        Root<Member> member = criteria.from(Member.class);
-        // Swap criteria statements if you would like to try out type-safe criteria queries, a new
-        // feature in JPA 2.0
-        // criteria.select(member).where(cb.equal(member.get(Member_.email), email));
-        criteria.select(member).where(cb.equal(member.get("email"), email));
-        return em.createQuery(criteria).getSingleResult();
-    }
-
-    public List<Member> findAllOrderedByName() {
-        CriteriaBuilder cb = em.getCriteriaBuilder();
-        CriteriaQuery<Member> criteria = cb.createQuery(Member.class);
-        Root<Member> member = criteria.from(Member.class);
-        // Swap criteria statements if you would like to try out type-safe criteria queries, a new
-        // feature in JPA 2.0
-        // criteria.select(member).orderBy(cb.asc(member.get(Member_.name)));
-        criteria.select(member).orderBy(cb.asc(member.get("name")));
-        return em.createQuery(criteria).getResultList();
-    }
-    
-    public CachedMember findByEmailCached(String email) {
     	@SuppressWarnings("unchecked")
     	QueryFactory<Query> qf = Search.getQueryFactory(membersCache);
-    	Query q = qf.from(CachedMember.class)
+    	Query q = qf.from(Member.class)
     			.having("email").eq(email)
     			.toBuilder().maxResults(1).build();
     	
-    	List<CachedMember> members = q.list();
-    	CachedMember member = null;
+    	List<Member> members = q.list();
+    	Member member = null;
     	
     	if (members.size() > 0)
     		member = members.get(0);
@@ -87,14 +57,14 @@ public class MemberRepository {
     	return member;
     }
     
-    public List<CachedMember> findAllOrderedByNameCached() {
+    public List<Member> findAllOrderedByName() {
         @SuppressWarnings("unchecked")
 		QueryFactory<Query> qf = Search.getQueryFactory(membersCache);
-        Query q = qf.from(CachedMember.class)
+        Query q = qf.from(Member.class)
         		.orderBy("name", SortOrder.ASC)
         		.build();
         
-        List<CachedMember> members = q.list();
+        List<Member> members = q.list();
         return members;
     	
     }    

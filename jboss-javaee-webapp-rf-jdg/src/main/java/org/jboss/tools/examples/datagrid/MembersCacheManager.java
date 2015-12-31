@@ -38,7 +38,6 @@ import javax.inject.Named;
 import org.infinispan.AdvancedCache;
 import org.infinispan.context.Flag;
 import org.infinispan.eviction.EvictionStrategy;
-import org.jboss.tools.examples.model.CachedMember;
 import org.jboss.tools.examples.model.Member;
 import org.richfaces.cdi.push.Push;
 
@@ -58,12 +57,12 @@ public class MembersCacheManager {
 	private Logger log;
 
     @Inject
-    @Push(topic = "pushCdiForCache")
+    @Push(topic = "pushCdi")
     Event<String> pushEvent;
 	
     @Inject
     @MembersClusteredCache
-    private AdvancedCache<Long, CachedMember> cache;
+    private AdvancedCache<String, Member> cache;
 
     public String getCacheName() {
         return cache.getName();
@@ -85,17 +84,17 @@ public class MembersCacheManager {
         return cache.getCacheConfiguration().eviction().maxEntries();
     }
 
-    public List<CachedMember> getCachedValues() {
-        return new ArrayList<CachedMember>(cache.getAdvancedCache().withFlags(Flag.SKIP_CACHE_LOAD).values());
+    public List<Member> getCachedValues() {
+        return new ArrayList<Member>(cache.getAdvancedCache().withFlags(Flag.SKIP_CACHE_LOAD).values());
     }
 
     public void clearCache() {
     	cache.clear();
     }
 
-    public void onMembersCacheChange(@Observes final CachedMember member) {
+    public void onMembersCacheChange(@Observes(notifyObserver=Reception.ALWAYS) final @Cached Member member) {
     	log.info("new Member event fired from ClusteredCacheListener!!!");
-        pushEvent.fire(String.format("New member added to the cache: %s (id: %d)", member.getName(), member.getId()));
+        pushEvent.fire(String.format("New member added to the cache: %s (email: %s)", member.getName(), member.getEmail()));
     }
     
 }

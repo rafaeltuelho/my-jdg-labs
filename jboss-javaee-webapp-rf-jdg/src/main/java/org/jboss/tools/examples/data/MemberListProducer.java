@@ -16,6 +16,9 @@
  */
 package org.jboss.tools.examples.data;
 
+import java.util.List;
+import java.util.logging.Logger;
+
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.RequestScoped;
 import javax.enterprise.event.Observes;
@@ -24,10 +27,6 @@ import javax.enterprise.inject.Produces;
 import javax.inject.Inject;
 import javax.inject.Named;
 
-import java.util.List;
-import java.util.logging.Logger;
-
-import org.jboss.tools.examples.model.CachedMember;
 import org.jboss.tools.examples.model.Member;
 
 @RequestScoped
@@ -40,7 +39,6 @@ public class MemberListProducer {
     private MemberRepository memberRepository;
 
     private List<Member> membersFromDB;
-    private List<CachedMember> membersFromCache;
 
     // @Named provides access the return value via the EL variable name "members" in the UI (e.g.
     // Facelets or JSP view)
@@ -50,20 +48,14 @@ public class MemberListProducer {
         return membersFromDB;
     }
 
-    @Produces
-    @Named
-    public List<CachedMember> getMembersFromCache() {
-        return membersFromCache;
-    }
-
     public void onMemberListChanged(@Observes(notifyObserver = Reception.IF_EXISTS) final Member member) {
     	log.info("new Member event fired!");
+    	log.info("\t refreshing members' list");
         retrieveAllMembersOrderedByName();
     }
 
     @PostConstruct
     public void retrieveAllMembersOrderedByName() {
         membersFromDB = memberRepository.findAllOrderedByName();
-        membersFromCache = memberRepository.findAllOrderedByNameCached();
     }
 }

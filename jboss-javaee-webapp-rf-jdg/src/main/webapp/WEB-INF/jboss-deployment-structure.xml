@@ -8,8 +8,8 @@
 			<module name="org.infinispan.query.dsl" slot="jdg-6.6"/>
 			
 			<!-- remoting -->
-			<module name="org.infinispan.client.hotrod" slot="jdg-6.5" services="export"/>
-			<module name="org.jboss.remoting3" slot="jdg-6.5"/>
+			<module name="org.infinispan.client.hotrod" slot="jdg-6.6" services="export"/>
+			<module name="org.jboss.remoting3"/>
 			
 			<!-- 
 			<module name="org.antlr.antlr-runtime" slot="jdg-6.5"/>

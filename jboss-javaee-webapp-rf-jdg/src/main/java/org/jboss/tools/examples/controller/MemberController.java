@@ -17,7 +17,6 @@
 package org.jboss.tools.examples.controller;
 
 import javax.annotation.PostConstruct;
-import javax.enterprise.event.Event;
 import javax.enterprise.inject.Model;
 import javax.enterprise.inject.Produces;
 import javax.faces.application.FacesMessage;
@@ -27,7 +26,6 @@ import javax.inject.Named;
 
 import org.jboss.tools.examples.model.Member;
 import org.jboss.tools.examples.service.MemberRegistration;
-import org.richfaces.cdi.push.Push;
 
 // The @Model stereotype is a convenience mechanism to make this a request-scoped bean that has an
 // EL name
@@ -36,17 +34,11 @@ import org.richfaces.cdi.push.Push;
 @Model
 public class MemberController {
 
-    public static final String PUSH_CDI_TOPIC = "pushCdi";
-
     @Inject
     private FacesContext facesContext;
 
     @Inject
     private MemberRegistration memberRegistration;
-
-    @Inject
-    @Push(topic = PUSH_CDI_TOPIC)
-    Event<String> pushEvent;
 
     private Member newMember;
     private Member member;
@@ -77,7 +69,6 @@ public class MemberController {
             memberRegistration.register(newMember);
             FacesMessage m = new FacesMessage(FacesMessage.SEVERITY_INFO, "Registered!", "Registration successful");
             facesContext.addMessage(null, m);
-            pushEvent.fire(String.format("New member added: %s (id: %d)", newMember.getName(), newMember.getId()));
             initNewMember();
         } catch (Exception e) {
             String errorMessage = getRootErrorMessage(e);

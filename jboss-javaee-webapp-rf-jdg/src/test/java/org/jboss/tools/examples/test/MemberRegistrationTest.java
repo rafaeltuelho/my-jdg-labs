@@ -40,7 +40,7 @@ public class MemberRegistrationTest {
     public static Archive<?> createTestArchive() {
         return ShrinkWrap.create(WebArchive.class, "test.war")
                 .addClasses(Member.class, MemberRegistration.class, Resources.class)
-                .addAsResource("META-INF/test-persistence.xml", "META-INF/persistence.xml")
+                .addAsResource("jgroups-udp.xml", "jgroups-udp.xml")
                 .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml")
                 // Deploy our test datasource
                 .addAsWebInfResource("test-ds.xml");

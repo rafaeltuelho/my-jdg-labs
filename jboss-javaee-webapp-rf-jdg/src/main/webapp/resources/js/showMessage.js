@@ -17,15 +17,7 @@
 showMessage = function(message) {
     jQuery('<div />', {
         'class' : 'rf-p-hdr'
-    }).prependTo('#newMemberMessages').text(message).fadeOut(10000, function() {
-        $(this).remove();
-    });
-};
-
-showMessageForCacheEvent = function(message) {
-    jQuery('<div />', {
-        'class' : 'rf-p-hdr'
-    }).prependTo('#newMemberOnCacheMessages').text(message).fadeOut(20000, function() {
+    }).prependTo('#newMemberMessages').text(message).fadeOut(30000, function() {
         $(this).remove();
     });
 };
