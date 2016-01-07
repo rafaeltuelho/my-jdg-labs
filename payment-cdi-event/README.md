@@ -6,10 +6,10 @@ The `payment-cdi-event` quickstart project is a simple webapp that uses CDI and 
 For more details about its implementation please see the [original project source code repo](https://github.com/jboss-developer/jboss-eap-quickstarts/tree/7.0.x-develop/payment-cdi-event)
 
 ## Demo description
-In this demo I'll show the new capability available in the JBoss Data Grid 6.5: [*Externalize HTTP Session from JBoss*](https://access.redhat.com/documentation/en-US/Red_Hat_JBoss_Data_Grid/6.5/html-single/Administration_and_Configuration_Guide/index.html#chap-Externalize_Sessions)
+In this demo I'll show the new capability available in the *JBoss Data Grid 6.5*: [**Externalize HTTP Session from JBoss**](https://access.redhat.com/documentation/en-US/Red_Hat_JBoss_Data_Grid/6.5/html-single/Administration_and_Configuration_Guide/index.html#chap-Externalize_Sessions)
 
 This capability allow us to externalize the HTTP Web Sessions from the Application Server to a external (remote) Data Grid cluster.
-In some scenarios this can alleviate the Application Server memory consumption and improve the availability and failover of your Web Application User State. There are other benefities this approach can bring to your setup:
+In some scenarios this can alleviate the Application Server memory consumption and improve the *availability* and *failover* of your Web Application User State. There are other benefits this approach can bring to your setup:
  - Cross data center state replication
 
 ## Software required for this demo
@@ -118,7 +118,7 @@ Start EAP nodes
   -Djdg.remoting.hothod.node3.port=11922
 ```
 
-==== Deploy the web app project
+##Deploy the web app project
 
 ```
 cd payment-cdi-event/
@@ -130,7 +130,7 @@ mvn jboss-as:deploy -Djboss-as.port=9999
 ```
 
 at this point you should see something like that in the eap_node1 console log output:
-> NOTE: showsing bellow only the important log entries...
+> NOTE: showing bellow only the important log entries...
 
 ```
 16:57:20,825 INFO  [org.jboss.as.server.deployment] (MSC service thread 1-7) JBAS015876: Starting deployment of "jboss-payment-cdi-event.war" (runtime-name: "jboss-payment-cdi-event.war")
@@ -177,7 +177,7 @@ and on eap_node2 log output you should see entries similar to eap_node1:
 
 ---
 
-### Inspectiong the Remote JDG clustered cache
+### Inspecting the Remote JDG clustered cache
 
 Connect to the cluster using the JDG CLI
 
@@ -190,5 +190,27 @@ You are disconnected at the moment. Type 'connect' to connect to the server or '
 [standalone@localhost:10599 distributed-cache=default] stats
 ```
 
+---
+
 ## Testing
-#TODO
+###TODO
+
+ * open the application in one browser window using the `eap_node1` instance: `http://localhost:8080/payment-cdi-event`
+  * create some Payment entries to store some data in the user web session.
+  * observe the session and cache info on the right side of the page.
+  * kill the `eap_node1` instance.
+   * you can use `kill -9 <jvm PID>` in a Linux box
+
+  * access the app using the `eap_node2` instance: `http://localhost:8180/payment-cdi-event`
+   * at this point you should see the same entries in the page.
+   > NOTE: this is possible because the user session id (`JSESSIONID`) is persisted as a cookie in the browser.
+
+ * now kill the `eap_node2` instance.
+ * ok! all your JBoss EAP cluster is down!
+ * make sure your sessions are still available in the JDG clustered cache:
+  * use the JDG CLI to inspect the cache.
+   * use the `stats` command to see the cache live information
+
+ * Now bring the `eap_node1` instance up again.
+ * open the app in the browser: `http://localhost:8080/payment-cdi-event`
+ * you should see the same data!
