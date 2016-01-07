@@ -34,23 +34,80 @@
         </license>
     </licenses>
 
+    <!-- Activate JBoss Product Maven repository.
+
+        NOTE: Configuring the Maven repository in the pom.xml file is not a recommended procedure
+        and is only done here to make it easier to use the quickstarts.
+
+        For more information about how to configure Maven for your application,
+        see the section entitled 'Use the Maven Repository'
+        in the Development Guide for JBoss EAP 6 located here:
+
+        https://access.redhat.com/documentation/en-US/JBoss_Enterprise_Application_Platform/6.3/html-single/Development_Guide
+    -->
+    <repositories>
+        <repository>
+            <id>redhat-techpreview-all-repository</id>
+            <url>https://maven.repository.redhat.com/techpreview/all/</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </repository>
+        <repository>
+          <id>jboss-community-repository</id>
+          <url>http://repository.jboss.org/nexus/content/groups/public/</url>
+          <releases>
+            <enabled>true</enabled>
+          </releases>
+          <snapshots>
+            <enabled>false</enabled>
+          </snapshots>
+        </repository>
+    </repositories>
+
+    <pluginRepositories>
+        <pluginRepository>
+            <id>redhat-techpreview-all-repository</id>
+            <url>https://maven.repository.redhat.com/techpreview/all/</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </pluginRepository>
+        <pluginRepository>
+          <id>jboss-community-plugin-repository</id>
+          <url>http://repository.jboss.org/nexus/content/groups/public/</url>
+          <releases>
+            <enabled>true</enabled>
+          </releases>
+          <snapshots>
+            <enabled>false</enabled>
+          </snapshots>
+        </pluginRepository>
+    </pluginRepositories>
+
     <properties>
-        <!-- Explicitly declaring the source encoding eliminates the following 
+        <!-- Explicitly declaring the source encoding eliminates the following
             message: -->
-        <!-- [WARNING] Using platform encoding (UTF-8 actually) to copy filtered 
+        <!-- [WARNING] Using platform encoding (UTF-8 actually) to copy filtered
             resources, i.e. build is platform dependent! -->
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
         <!-- JBoss dependency versions -->
-        
+
         <version.jboss.maven.plugin>7.4.Final</version.jboss.maven.plugin>
-        
+
         <!-- Define the version of the JBoss BOMs we want to import to specify tested stacks. -->
         <version.jboss.bom.eap>6.4.0.GA</version.jboss.bom.eap>
 
         <version.jboss.spec.javaee.6.0>3.0.2.Final-redhat-15</version.jboss.spec.javaee.6.0>
          <version.org.infinispan>6.3.1.Final-redhat-1</version.org.infinispan>
-        
+
         <version.omnifaces>1.12.1</version.omnifaces>
 
         <!-- other plugin versions -->
@@ -64,11 +121,11 @@
     <dependencyManagement>
         <dependencies>
             <!-- Define the version of JBoss' Java EE 6 APIs we want to use -->
-            <!-- JBoss distributes a complete set of Java EE 6 APIs including 
-                a Bill of Materials (BOM). A BOM specifies the versions of a "stack" (or 
-                a collection) of artifacts. We use this here so that we always get the correct 
-                versions of artifacts. Here we use the jboss-javaee-6.0-with-hibernate stack 
-                (you can read this as the JBoss stack of the Java EE Web Profile 6 APIs with 
+            <!-- JBoss distributes a complete set of Java EE 6 APIs including
+                a Bill of Materials (BOM). A BOM specifies the versions of a "stack" (or
+                a collection) of artifacts. We use this here so that we always get the correct
+                versions of artifacts. Here we use the jboss-javaee-6.0-with-hibernate stack
+                (you can read this as the JBoss stack of the Java EE Web Profile 6 APIs with
                 extras from the Hibernate family of projects) -->
             <dependency>
                 <groupId>org.jboss.spec</groupId>
@@ -106,7 +163,7 @@
             <scope>provided</scope>
         </dependency>
 
-        <!-- Import the Common Annotations API (JSR-250), we use provided 
+        <!-- Import the Common Annotations API (JSR-250), we use provided
             scope as the API is included in JBoss EAP 6 -->
         <dependency>
             <groupId>org.jboss.spec.javax.annotation</groupId>
@@ -114,7 +171,7 @@
             <scope>provided</scope>
         </dependency>
 
-        <!-- Import the Servlet API, we use provided scope as the API is 
+        <!-- Import the Servlet API, we use provided scope as the API is
             included in JBoss EAP 6 -->
         <dependency>
             <groupId>org.jboss.spec.javax.servlet</groupId>
@@ -131,7 +188,7 @@
             <artifactId>hibernate-validator</artifactId>
         </dependency>
 
-        
+
         <!-- Import the Infinispan client hotrod -->
         <dependency>
             <groupId>org.infinispan</groupId>
@@ -153,7 +210,7 @@
             <artifactId>infinispan-remote-query-client</artifactId>
         </dependency>
 
-		<!-- JSF Utilities --> 
+		<!-- JSF Utilities -->
 		<dependency>
 		    <groupId>org.omnifaces</groupId>
 		    <artifactId>omnifaces</artifactId>
@@ -163,7 +220,7 @@
     </dependencies>
 
     <build>
-        <!-- Set the name of the war, used as the context root when the app 
+        <!-- Set the name of the war, used as the context root when the app
             is deployed -->
         <finalName>${project.artifactId}</finalName>
         <plugins>
@@ -171,7 +228,7 @@
                 <artifactId>maven-war-plugin</artifactId>
                 <version>${version.war.plugin}</version>
                 <configuration>
-                    <!-- Java EE 6 doesn't require web.xml, Maven needs to 
+                    <!-- Java EE 6 doesn't require web.xml, Maven needs to
                         catch up! -->
                     <failOnMissingWebXml>false</failOnMissingWebXml>
                 </configuration>
