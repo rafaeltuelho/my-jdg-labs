@@ -196,6 +196,9 @@ You are disconnected at the moment. Type 'connect' to connect to the server or '
 ###TODO
 
  * open the application in one browser window using the `eap_node1` instance: `http://localhost:8080/payment-cdi-event`
+ ![payment-cdi-event web page](docs/payment-cdi-event-node3.png "App web page")
+
+
   * create some Payment entries to store some data in the user web session.
   * observe the session and cache info on the right side of the page.
   * kill the `eap_node1` instance.
