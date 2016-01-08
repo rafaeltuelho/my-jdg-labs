@@ -37,7 +37,7 @@ public class RemoteCacheInfoBean implements Serializable{
 		sb.append("Cache Stats\n");
 		for (Entry<String, String> entry : remoteCache.stats().getStatsMap().entrySet()){
 //			log.info("Entry key [" + entry.getKey()  + "]: value => " + entry.getValue());
-			sb.append("Entry key [" + entry.getKey()  + "]: value => " + entry.getValue() + "\n");
+			sb.append(entry.getKey()  + ": " + entry.getValue() + "\n");
 		}
 		sb.append("---\n");
 		
